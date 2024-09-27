@@ -1,34 +1,25 @@
 package com._mas1r.licenser.models;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-import java.util.List;
-import java.util.UUID;
-
-
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class AdminCompany {
+public class SMTP {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
-    private String firstName;
+    private String host;
 
-    private String lastName;
+    private int port;
 
-    @Column(unique = true)
     private String username;
-
-    @Column(unique = true)
-    private String email;
 
     private String password;
 
@@ -36,5 +27,7 @@ public class AdminCompany {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    private String role;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "master_admin_id")
+    private MasterAdmin masterAdmin;
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class RegisterCompanyDTO {
     private String companyName;
     private String companyEmail;
-    private String companyLogo;
+    private String licenseType;
     private String adminFirstName;
     private String adminLastName;
     private String adminUserName;

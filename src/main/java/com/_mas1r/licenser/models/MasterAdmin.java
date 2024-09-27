@@ -1,9 +1,6 @@
 package com._mas1r.licenser.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,11 +20,16 @@ public class MasterAdmin {
 
         private String lastName;
 
+        @Column(unique = true)
         private String username;
 
+        @Column(unique = true)
         private String email;
 
         private String password;
+
+        @OneToOne(mappedBy = "masterAdmin", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        private SMTP smtp;
 
         private String role;
 }

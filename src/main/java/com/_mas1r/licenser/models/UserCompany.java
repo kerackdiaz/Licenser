@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class UserCompany {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,8 +21,10 @@ public class UserCompany {
 
     private String lastName;
 
+    @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
@@ -31,10 +32,6 @@ public class UserCompany {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id")
-    private AdminCompany admin;
 
     private String role;
 }

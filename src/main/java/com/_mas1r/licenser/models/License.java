@@ -1,40 +1,36 @@
 package com._mas1r.licenser.models;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-import java.util.List;
+import java.time.LocalDate;
 import java.util.UUID;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class AdminCompany {
+public class License {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String firstName;
+    @Enumerated(EnumType.STRING)
+    private LicenseType licenseType;
 
-    private String lastName;
+    private LocalDate CreationDate;
 
-    @Column(unique = true)
-    private String username;
+    private LocalDate ExpirationDate;
 
-    @Column(unique = true)
-    private String email;
+    private String licenseKey;
 
-    private String password;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
-
-    private String role;
 }

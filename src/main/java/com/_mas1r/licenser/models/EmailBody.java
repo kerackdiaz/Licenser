@@ -18,11 +18,13 @@ public class EmailBody {
 
     private String subject;
 
-    @Lob
     private String body;
 
     @Enumerated(EnumType.STRING)
     private EmailType emailType;
+
+    @Enumerated(EnumType.STRING)
+    private ProjectType projectType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")

@@ -3,16 +3,11 @@ package com._mas1r.licenser.service.impl;
 import com._mas1r.licenser.dtos.RegisterCompanyDTO;
 import com._mas1r.licenser.dtos.SignInDTO;
 import com._mas1r.licenser.dtos.SignUpDTO;
-import com._mas1r.licenser.models.AdminCompany;
-import com._mas1r.licenser.models.Company;
-import com._mas1r.licenser.models.MasterAdmin;
-import com._mas1r.licenser.models.UserCompany;
-import com._mas1r.licenser.repositories.AdminRepository;
-import com._mas1r.licenser.repositories.CompanyRepository;
-import com._mas1r.licenser.repositories.MasterRepository;
-import com._mas1r.licenser.repositories.UserRepository;
+import com._mas1r.licenser.models.*;
+import com._mas1r.licenser.repositories.*;
 import com._mas1r.licenser.security.JwtUtilService;
 import com._mas1r.licenser.service.AuthenticacionService;
+import com._mas1r.licenser.service.LicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +35,12 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private LicenseService licenseService;
+
+    @Autowired
+    private LicenseRepository   licenseRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -121,6 +123,7 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
         return response;
     }
 
+
     @Override
     public Map<String, Object> Login(SignInDTO signinDTO) {
         Map<String, Object> response = new HashMap<>();
@@ -152,13 +155,22 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
                     response.put("message", "Password is incorrect");
                     return response;
                 }
-            } else if (master != null) {
+            } else {
                 if (!passwordEncoder.matches(signinDTO.getPassword(), master.getPassword())) {
                     response.put("message", "Password is incorrect");
                     return response;
                 }
             }
-
+            assert user != null;
+            if (!user.getCompany().isActive()){
+                response.put("message", "Contacte con el administrador de la plataforma");
+                return response;
+            }
+            assert admin != null;
+            if (!admin.getCompany().isActive()){
+                response.put("message", "Contacte con el administrador de la plataforma");
+                return response;
+            }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(), signinDTO.getPassword()));
             final UserDetails userDetails = userDetailsService.loadUserByUsername(signinDTO.getUsername());
             final String jwt = jwtUtilService.generateToken(userDetails);
@@ -181,10 +193,6 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
             }
             if(register.getCompanyEmail().isBlank()){
                 response.put("message", "Company email is empty");
-                return response;
-            }
-            if(register.getCompanyLogo().isBlank()){
-                response.put("message", "Company logo is empty");
                 return response;
             }
             if(register.getAdminFirstName().isBlank()){
@@ -211,13 +219,28 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
                 response.put("message", "AdminCompany already exists");
                 return response;
             }
+
+            if(masterAdmin == null){
+                response.put("message", "You do not have permission to perform this action");
+                return response;
+            }
+
             Company company = new Company();
             company.setCompanyName(register.getCompanyName());
             company.setCompanyEmail(register.getCompanyEmail());
-            if (!register.getCompanyLogo().isBlank()){
-                company.setCompanyLogo(register.getCompanyLogo());
-            }
+            company.setCreationDate(LocalDate.now());
+            company.setActive(true);
             companyRepository.save(company);
+            License license = licenseService.createLicense(LicenseType.valueOf(register.getLicenseType()), LocalDate.now(),null);
+            company.setLicense(license);
+            licenseRepository.save(license);
+            companyRepository.save(company);
+            license.setCompany(company);
+            licenseRepository.save(license);
+
+
+
+
             AdminCompany adminCompany = new AdminCompany();
             adminCompany.setFirstName(register.getAdminFirstName());
             adminCompany.setLastName(register.getAdminLastName());

@@ -1,22 +1,19 @@
-package com._mas1r.licenser.models;
+package com._mas1r.licenser.dtos;
 
+import com._mas1r.licenser.models.Company;
+import com._mas1r.licenser.models.License;
+import com._mas1r.licenser.models.LicenseType;
+import com._mas1r.licenser.models.ProjectType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
-
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class ProjectDTO {
     private String clientName;
 
     private String clientAddress;
@@ -31,26 +28,20 @@ public class Project {
 
     private String clientEmail;
 
-    @Column(length = 1000)
     private String Description;
 
     private String projectName;
 
     private String projectUrl;
 
-    @Enumerated(EnumType.STRING)
-    private ProjectType type;
+    private String type;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "license_id")
-    private License license;
 
     private LocalDate initDate;
 
     private LocalDate ExpDate;
 
-    @Enumerated(EnumType.STRING)
-    private LicenseType licenseType;
+    private String licenseType;
 
     private String redirect;
 
@@ -63,9 +54,5 @@ public class Project {
     private boolean statusLicense;
 
     private boolean statusProject;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
 
 }

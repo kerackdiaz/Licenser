@@ -18,7 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 
 @Configuration
-public class Web {
+public class WebConfig {
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
