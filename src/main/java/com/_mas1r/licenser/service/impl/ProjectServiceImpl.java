@@ -7,19 +7,19 @@ import com._mas1r.licenser.service.LicenseService;
 import com._mas1r.licenser.service.MailSenderService;
 import com._mas1r.licenser.service.ProjectService;
 import com._mas1r.licenser.service.SenderNotificationService;
-import com._mas1r.licenser.utils.SerialKey;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
+
+import static java.time.LocalDate.*;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
-    private SerialKey Key;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -45,6 +45,39 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private SenderNotificationService notificationService;
 
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendExpirationNotification(Project project) throws MessagingException {
+        List<Project> projects = projectRepository.findAll();
+        for (Project project1 : projects) {
+            if (project1.getExpDate().isBefore(project1.getExpDate().minusDays(5))) {
+                notificationService.sendExpirationNotification(project1);
+                Company company = project1.getCompany();
+                EmailBody emailBody = company.getEmailBodies().stream().anyMatch(e -> e.getProjectType().equals(project1.getType()) && e.getEmailType().equals(EmailType.LICENSE_ALERTE_EXPIRATION)) ? company.getEmailBodies().stream().filter(emailBody1 -> emailBody1.getProjectType().equals(project1.getType()) && emailBody1.getEmailType().equals(EmailType.LICENSE_ALERTE_EXPIRATION)).findFirst().orElse(null) : null;
+                assert emailBody != null;
+                mailSenderService.sendEmail(project.getClientEmail(),emailBody.getSubject(),emailBody.getBody());
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendExpiredNotification(Project project) throws MessagingException {
+        List<Project> projects = projectRepository.findAll();
+        for (Project project1 : projects) {
+            if (project1.getExpDate().equals(now())) {
+                notificationService.sendExpiredNotification(project1);
+                Company company = project1.getCompany();
+                EmailBody emailBody = company.getEmailBodies().stream().anyMatch(e -> e.getProjectType().equals(project1.getType()) && e.getEmailType().equals(EmailType.LICENSE_EXPIRED)) ? company.getEmailBodies().stream().filter(emailBody1 -> emailBody1.getProjectType().equals(project1.getType()) && emailBody1.getEmailType().equals(EmailType.LICENSE_EXPIRED)).findFirst().orElse(null) : null;
+                assert emailBody != null;
+                mailSenderService.sendEmail(project.getClientEmail(),emailBody.getSubject(),emailBody.getBody());
+            }
+        }
+    }
+
+
+
+
+
     public String newProject(ProjectDTO project, String email) throws MessagingException {
         UUID companyId = null;
         if (adminRepository.existsByEmail(email)) {
@@ -53,11 +86,8 @@ public class ProjectServiceImpl implements ProjectService {
             companyId = userRepository.findByEmail(email).getCompany().getId();
         }
 
+        assert companyId != null;
         Company company = companyRepository.findById(companyId).orElse(null);
-
-        if (companyId == null) {
-            return "Company not found for the given email";
-        }
 
         Project newProject = new Project();
         newProject.setClientName(project.getClientName());
@@ -87,24 +117,28 @@ public class ProjectServiceImpl implements ProjectService {
         newProject.setLicense(licenseService.createLicense(LicenseType.valueOf(project.getLicenseType()), project.getInitDate(), newProject));
         projectRepository.save(newProject);
         assert company != null;
-        EmailBody emailBody = emailRepository.findByProjectType(company.getEmailBodies().stream().map(EmailBody::getProjectType).filter(projectType -> projectType.equals(newProject.getType())).findFirst().orElse(null));
+        EmailBody emailBody = company.getEmailBodies().stream().anyMatch(e -> e.getProjectType().equals(newProject.getType()) && e.getEmailType().equals(EmailType.NEW_PROJECT)) ? company.getEmailBodies().stream().filter(emailBody1 -> emailBody1.getProjectType().equals(newProject.getType()) && emailBody1.getEmailType().equals(EmailType.NEW_PROJECT)).findFirst().orElse(null) : null;
+        assert emailBody != null;
         mailSenderService.sendEmail(project.getClientEmail(),emailBody.getSubject(),emailBody.getBody());
         notificationService.sendCreationNotification(newProject);
         return "Proyecto creado exitosamente";
     }
+
+
 
     public String renewProject(UUID projectId) throws MessagingException {
         Project project = projectRepository.findById(projectId).orElse(null);
         if (project == null) {
             return "Project not found";
         }
-        project.setInitDate(LocalDate.now());
-        project.setExpDate(licenseService.licenseExpiration(project.getLicense().getLicenseType(), LocalDate.now()));
+        project.setInitDate(now());
+        project.setExpDate(licenseService.licenseExpiration(project.getLicense().getLicenseType(), now()));
         projectRepository.save(project);
         project.setLicense(licenseService.renewLicense(projectId));
         projectRepository.save(project);
         Company company = project.getCompany();
-        EmailBody emailBody = emailRepository.findByProjectType(company.getEmailBodies().stream().map(EmailBody::getProjectType).filter(projectType -> projectType.equals(project.getType())).findFirst().orElse(null));
+        EmailBody emailBody = company.getEmailBodies().stream().anyMatch(e -> e.getProjectType().equals(project.getType()) && e.getEmailType().equals(EmailType.LICENSE_RENEWAL)) ? company.getEmailBodies().stream().filter(e -> e.getProjectType().equals(project.getType()) && e.getEmailType().equals(EmailType.LICENSE_RENEWAL)).findFirst().orElse(null) : null;
+        assert emailBody != null;
         mailSenderService.sendEmail(project.getClientEmail(),emailBody.getSubject(),emailBody.getBody());
         notificationService.sendRenewalNotification(project);
         return "Proyecto renovado exitosamente";

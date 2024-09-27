@@ -8,6 +8,7 @@ import com._mas1r.licenser.repositories.*;
 import com._mas1r.licenser.security.JwtUtilService;
 import com._mas1r.licenser.service.AuthenticacionService;
 import com._mas1r.licenser.service.LicenseService;
+import com._mas1r.licenser.service.SenderNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +42,9 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
 
     @Autowired
     private LicenseRepository   licenseRepository;
+
+    @Autowired
+    private SenderNotificationService senderNotificationService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -249,6 +253,7 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
             adminCompany.setPassword(passwordEncoder.encode(register.getAdminPassword()));
             adminCompany.setCompany(company);
             adminRepository.save(adminCompany);
+            senderNotificationService.sendRegisterCompanyNotification(company);
             response.put("message", "Company created successfully");
 
         }catch (Exception e){
@@ -256,5 +261,19 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
             return response;
         }
         return response;
+    }
+
+    @Override
+    public void recoveryPassword(String email) {
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email);
+        UserCompany userCompany = userRepository.findByEmail(email);
+        if (masterAdmin != null) {
+            // Send email to masterAdmin
+        } else if (adminCompany != null) {
+            // Send email to adminCompany
+        } else if (userCompany != null) {
+            // Send email to userCompany
+        }
     }
 }

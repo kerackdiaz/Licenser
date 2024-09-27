@@ -1,6 +1,8 @@
 package com._mas1r.licenser.service.impl;
 
 import com._mas1r.licenser.dtos.CompanyDTO;
+import com._mas1r.licenser.dtos.UsersDTO;
+import com._mas1r.licenser.models.AdminCompany;
 import com._mas1r.licenser.repositories.AdminRepository;
 import com._mas1r.licenser.repositories.CompanyRepository;
 import com._mas1r.licenser.repositories.UserRepository;
@@ -25,5 +27,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<CompanyDTO> getAllCompanies() {
         return companyRepository.findAll().stream().map(CompanyDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UsersDTO> getAllUsers(String companyId) {
+        List<UsersDTO> users = userRepository.findByCompanyId(companyId).stream()
+                .map(UsersDTO::new)
+                .collect(Collectors.toList());
+
+        AdminCompany adminCompany = adminRepository.findByCompanyId(companyId);
+        if (adminCompany != null) {
+            users.add(new UsersDTO(adminCompany));
+        }
+
+        return users;
     }
 }
