@@ -16,5 +16,4 @@ public class RegisterCompanyDTO {
     private String adminUserName;
     private String adminEmail;
     private String adminPassword;
-
 }

@@ -58,6 +58,7 @@ public class SenderNotificationServiceImpl implements SenderNotificationService 
     @Override
     public void sendRegisterCompanyNotification(Company company) throws MessagingException {
         mailSenderService.sendEmail(company.getCompanyEmail(), "Hola " + company.getCompanyName(), "The company has been registered successfully.");
+        //enviar correo al super admin
     }
 
 

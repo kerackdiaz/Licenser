@@ -40,5 +40,4 @@ public class UsersDTO {
         this.role = adminCompany.getRole();
     }
 
-
 }

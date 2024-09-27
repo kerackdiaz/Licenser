@@ -68,7 +68,9 @@ public class LicenseServiceImpl implements LicenseService {
     @Override
     public License renewLicense(UUID projectId) {
         Project project= projectRepository.findById(projectId).orElse(null);
+        assert project != null;
         License license = licenseRepository.findById(project.getLicense().getId()).orElse(null);
+        assert license != null;
         LocalDate creationDate = license.getProject().getInitDate();
         license.setCreationDate(creationDate);
         license.setExpirationDate(licenseExpiration(license.getLicenseType(), creationDate));

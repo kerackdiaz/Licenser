@@ -10,6 +10,7 @@ import com._mas1r.licenser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UsersDTO> getAllUsers(String companyId) {
+    public List<UsersDTO> getAllUsers(UUID companyId) {
         List<UsersDTO> users = userRepository.findByCompanyId(companyId).stream()
                 .map(UsersDTO::new)
                 .collect(Collectors.toList());

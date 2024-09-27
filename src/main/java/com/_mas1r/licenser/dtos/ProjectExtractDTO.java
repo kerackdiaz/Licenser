@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProjectExtractDTO {
 
+    private String id;
+
     private String clientName;
 
     private String projectName;
@@ -23,6 +25,7 @@ public class ProjectExtractDTO {
     private String licenseType;
 
     public ProjectExtractDTO(Project project) {
+        this.id = String.valueOf(project.getId());
         this.clientName = project.getClientName();
         this.projectName = project.getProjectName();
         this.license = project.isStatusProject() ? "Active" : "Inactive";

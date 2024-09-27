@@ -1,10 +1,5 @@
 package com._mas1r.licenser.dtos;
 
-import com._mas1r.licenser.models.Company;
-import com._mas1r.licenser.models.License;
-import com._mas1r.licenser.models.LicenseType;
-import com._mas1r.licenser.models.ProjectType;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +30,6 @@ public class ProjectDTO {
     private String projectUrl;
 
     private String type;
-
 
     private LocalDate initDate;
 
