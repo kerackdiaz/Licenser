@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,6 +33,8 @@ public class CompanyDTO {
 
     private String Status;
 
+    private List<ProjectExtractDTO> projects;
+
     public CompanyDTO(Company company) {
         this.id = String.valueOf(company.getId());
         this.name = company.getCompanyName();
@@ -44,5 +47,6 @@ public class CompanyDTO {
         this.LicenseType = company.getLicense().getLicenseType().toString();
         this.expirationDate = company.getLicense().getExpirationDate();
         this.Status = company.isActive() ? "Active" : "Inactive";
+        this.projects = company.getProjects().stream().map(ProjectExtractDTO::new).toList();
     }
 }

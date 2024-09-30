@@ -37,7 +37,7 @@ public class WebConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("auth/signin", "auth/signup", "/api/admin/login", "/api/admin-super/login",
+                        .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/signup", "/api/v1/license/check/*",
                                 "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         .requestMatchers("/api/users/current", "/api/users/current/claims", "/api/users/current/delete-claims",

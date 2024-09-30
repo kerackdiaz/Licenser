@@ -1,5 +1,6 @@
 package com._mas1r.licenser.service.impl;
 
+import com._mas1r.licenser.dtos.CompanyDTO;
 import com._mas1r.licenser.dtos.ProjectDTO;
 import com._mas1r.licenser.models.*;
 import com._mas1r.licenser.repositories.*;
@@ -10,10 +11,12 @@ import com._mas1r.licenser.service.SenderNotificationService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static java.time.LocalDate.*;
 
@@ -44,6 +47,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private SenderNotificationService notificationService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
 
     @Scheduled(cron = "0 0 0 * * *")
@@ -142,5 +151,23 @@ public class ProjectServiceImpl implements ProjectService {
         mailSenderService.sendEmail(project.getClientEmail(),emailBody.getSubject(),emailBody.getBody());
         notificationService.sendRenewalNotification(project);
         return "Proyecto renovado exitosamente";
+    }
+
+    @Override
+    public Map<String, Object> getAllData() {
+        Map<String, Object> response = new HashMap<>();
+        String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
+        AdminCompany admin = adminRepository.findByEmail(userMail);
+        UserCompany user = userRepository.findByEmail(userMail);
+        try{
+         CompanyDTO company = new CompanyDTO(admin != null ? admin.getCompany() : user.getCompany());
+            if (company == null) {
+                response.put("the company does not exist", null);
+                return response;
+            }
+        }catch (Exception e) {
+            return null;
+        }
+        return response;
     }
 }

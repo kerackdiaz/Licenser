@@ -1,17 +1,12 @@
 package com._mas1r.licenser.service.impl;
 
-import com._mas1r.licenser.models.EmailBody;
 import com._mas1r.licenser.models.License;
 import com._mas1r.licenser.models.LicenseType;
 import com._mas1r.licenser.models.Project;
-import com._mas1r.licenser.repositories.EmailRepository;
 import com._mas1r.licenser.repositories.LicenseRepository;
 import com._mas1r.licenser.repositories.ProjectRepository;
 import com._mas1r.licenser.service.LicenseService;
-import com._mas1r.licenser.service.MailSenderService;
-import com._mas1r.licenser.service.SenderNotificationService;
 import com._mas1r.licenser.utils.SerialKey;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +71,14 @@ public class LicenseServiceImpl implements LicenseService {
         license.setExpirationDate(licenseExpiration(license.getLicenseType(), creationDate));
         licenseRepository.save(license);
         return license;
+    }
+
+
+    @Override
+    public boolean checkLicense(String url){
+        Project project = projectRepository.findByProjectUrl(url).orElse(null);
+        assert project != null;
+        return  project.getExpDate().isBefore(LocalDate.now());
     }
 
 }

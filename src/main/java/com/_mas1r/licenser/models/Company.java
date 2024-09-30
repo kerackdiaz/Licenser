@@ -49,5 +49,8 @@ public class Company {
     @OneToOne(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private License license;
 
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Project> projects;
+
     private String whatsappToken;
 }

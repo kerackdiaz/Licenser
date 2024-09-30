@@ -10,4 +10,6 @@ public interface UserService {
     List<CompanyDTO> getAllCompanies();
 
     List<UsersDTO> getAllUsers(UUID companyId);
+
+    String updateCompany(String id, CompanyDTO companyDTO);
 }

@@ -14,4 +14,6 @@ public interface LicenseService {
     License createLicense(LicenseType licenseType, LocalDate creationDate, Project project) throws MessagingException;
 
     License renewLicense(UUID projectId) throws MessagingException;
+
+    boolean checkLicense(String url);
 }

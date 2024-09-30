@@ -12,6 +12,7 @@ import com._mas1r.licenser.service.SenderNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -165,20 +166,20 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
                     return response;
                 }
             }
-            assert user != null;
-            if (!user.getCompany().isActive()){
-                response.put("message", "Contacte con el administrador de la plataforma");
-                return response;
-            }
-            assert admin != null;
-            if (!admin.getCompany().isActive()){
-                response.put("message", "Contacte con el administrador de la plataforma");
-                return response;
+            if (master == null) {
+                if (!user.getCompany().isActive()){
+                    response.put("message", "Contacte con el administrador de la plataforma");
+                    return response;
+                }
+                if (!admin.getCompany().isActive()){
+                    response.put("message", "Contacte con el administrador de la plataforma");
+                    return response;
+                }
             }
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(), signinDTO.getPassword()));
             final UserDetails userDetails = userDetailsService.loadUserByUsername(signinDTO.getUsername());
             final String jwt = jwtUtilService.generateToken(userDetails);
-            response.put("message", jwt);
+            response.put("token", jwt);
         } catch (Exception e) {
             response.put("message", "Error: " + e.getMessage());
             return response;
@@ -187,8 +188,9 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
     }
 
     @Override
-    public Map<String, Object> CreateCompany(RegisterCompanyDTO register, String email) {
+    public Map<String, Object> CreateCompany(RegisterCompanyDTO register) {
         Map<String, Object> response = new HashMap<>();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         MasterAdmin masterAdmin = masterRepository.findByEmail(email);
         try{
             if(register.getCompanyName().isBlank()){

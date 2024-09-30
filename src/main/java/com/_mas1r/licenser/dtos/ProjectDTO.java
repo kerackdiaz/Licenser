@@ -1,5 +1,6 @@
 package com._mas1r.licenser.dtos;
 
+import com._mas1r.licenser.models.Project;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,4 +50,13 @@ public class ProjectDTO {
 
     private boolean statusProject;
 
+
+    public ProjectDTO(Project project) {
+    this.clientName = project.getClientName();
+    this.clientAddress = project.getClientAddress();
+    this.clientPhone = project.getClientPhone();
+    this.ClientDni = project.getClientDni();
+    this.providerHost = project.getProviderHost();
+    this.providerDomain = project.getProviderDomain();
+    }
 }

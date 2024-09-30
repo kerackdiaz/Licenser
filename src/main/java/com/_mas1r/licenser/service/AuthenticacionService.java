@@ -15,7 +15,7 @@ public interface AuthenticacionService {
 
     Map<String, Object> Login(SignInDTO signInDTO);
 
-    Map<String, Object> CreateCompany(RegisterCompanyDTO register, String email);
+    Map<String, Object> CreateCompany(RegisterCompanyDTO register);
 
     void recoveryPassword(String email);
 }
