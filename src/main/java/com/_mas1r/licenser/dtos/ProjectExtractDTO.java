@@ -24,15 +24,17 @@ public class ProjectExtractDTO {
 
     private String licenseType;
 
+    private String projectStatus;
+
     public ProjectExtractDTO(Project project) {
         this.id = String.valueOf(project.getId());
         this.clientName = project.getClientName();
         this.projectName = project.getProjectName();
-        this.license = project.isStatusProject() ? "Active" : "Inactive";
+        this.license = project.isStatusLicense() ? "Active" : "Inactive";
         this.initDate = project.getInitDate();
         this.ExpDate = project.getExpDate();
         this.licenseType = project.getLicenseType().toString();
+        this.projectStatus = project.isStatusProject() ? "Active" : "Inactive";
     }
-
 
 }

@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
@@ -50,9 +52,16 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticacionService.Register(signUpDTO,email));
     }
 
+
+
     @Operation(summary = "Sign in", description = "Inicio de sesion")
     @PostMapping("/signin")
     public ResponseEntity<?> signUp(@RequestBody SignInDTO signInDTO) {
         return ResponseEntity.ok(authenticacionService.Login(signInDTO));
+    }
+
+    @PostMapping("/recovery/{id}")
+    public ResponseEntity<?> recovery(@PathVariable UUID id, @RequestBody String password) {
+        return ResponseEntity.ok(authenticacionService.recoveryPassword(id, password));
     }
 }

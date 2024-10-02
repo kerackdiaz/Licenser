@@ -27,7 +27,15 @@ public class Project {
 
     private String providerHost;
 
+    private String userHosting;
+
+    private String passwordHosting;
+
     private String providerDomain;
+
+    private String userDomain;
+
+    private String passwordDomain;
 
     private String clientEmail;
 
@@ -35,6 +43,10 @@ public class Project {
     private String Description;
 
     private String projectName;
+
+    private String projectUser;
+
+    private String projectPassword;
 
     private String projectUrl;
 

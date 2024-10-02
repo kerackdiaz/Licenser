@@ -1,4 +1,3 @@
-// src/main/java/com/_mas1r/licenser/models/UserCompany.java
 package com._mas1r.licenser.models;
 
 import jakarta.persistence.*;

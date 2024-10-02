@@ -6,6 +6,7 @@ import com._mas1r.licenser.dtos.SignUpDTO;
 
 
 import java.util.Map;
+import java.util.UUID;
 
 
 public interface AuthenticacionService {
@@ -15,7 +16,6 @@ public interface AuthenticacionService {
 
     Map<String, Object> Login(SignInDTO signInDTO);
 
-    Map<String, Object> CreateCompany(RegisterCompanyDTO register);
 
-    void recoveryPassword(String email);
+    String recoveryPassword(UUID id, String password);
 }

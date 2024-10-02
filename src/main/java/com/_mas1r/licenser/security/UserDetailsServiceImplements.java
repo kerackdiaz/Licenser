@@ -27,35 +27,41 @@ public class UserDetailsServiceImplements implements UserDetailsService {
     private MasterRepository masterRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
 
-        UserCompany user = userRepository.findByEmail(email);
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        MasterAdmin superAdmin = masterRepository.findByEmail(email);
+        UserCompany user = userRepository.findByEmail(input);
+        AdminCompany adminCompany = adminRepository.findByEmail(input);
+        MasterAdmin superAdmin = masterRepository.findByEmail(input);
 
-        if(user == null && adminCompany == null && superAdmin == null) {
-            throw new UsernameNotFoundException(email);
+        if(superAdmin == null && user == null && adminCompany == null) {
+           user = userRepository.findByUsername(input);
+              adminCompany = adminRepository.findByUsername(input);
+                superAdmin = masterRepository.findByUsername(input);
         }
 
-        if(adminCompany != null && user == null && superAdmin == null) {
+
+        if(user == null && adminCompany == null && superAdmin == null) {
+            throw new UsernameNotFoundException(input);
+        }
+
+        if(adminCompany != null ) {
             return User
-                    .withUsername(email)
+                    .withUsername(input)
                     .password(adminCompany.getPassword())
                     .roles("ADMIN")
                     .build();
         }
 
-        if(superAdmin != null && user == null && adminCompany == null) {
+        if(superAdmin != null) {
             return User
-                    .withUsername(email)
+                    .withUsername(input)
                     .password(superAdmin.getPassword())
                     .roles("ADMIN_SUPER")
                     .build();
         }
 
-        assert user != null;
         return User
-                .withUsername(email)
+                .withUsername(input)
                 .password(user.getPassword())
                 .roles("USER")
                 .build();

@@ -25,6 +25,10 @@ public class CompanyDTO {
 
     private String urlLogo;
 
+    private String primaryColor;
+
+    private String secondaryColor;
+
     private LocalDate creationDate;
 
     private String LicenseType;
@@ -34,6 +38,18 @@ public class CompanyDTO {
     private String Status;
 
     private List<ProjectExtractDTO> projects;
+
+    private String CompanyKeyId;
+
+    private String whatsappToken;
+
+    private String host;
+
+    private int port;
+
+    private String username;
+
+    private String password;
 
     public CompanyDTO(Company company) {
         this.id = String.valueOf(company.getId());
@@ -48,5 +64,11 @@ public class CompanyDTO {
         this.expirationDate = company.getLicense().getExpirationDate();
         this.Status = company.isActive() ? "Active" : "Inactive";
         this.projects = company.getProjects().stream().map(ProjectExtractDTO::new).toList();
+        this.CompanyKeyId = company.getCompanyKeyId();
+        this.whatsappToken = company.getWhatsappToken();
+        this.host = company.getSmtp().getHost();
+        this.port = company.getSmtp().getPort();
+        this.username = company.getSmtp().getUsername();
+        this.password = company.getSmtp().getPassword();
     }
 }

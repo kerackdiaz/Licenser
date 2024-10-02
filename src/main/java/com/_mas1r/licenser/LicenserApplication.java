@@ -38,38 +38,38 @@ public class LicenserApplication {
 
 
 
-			Company company = new Company();
-			company.setCompanyName("Test Company");
-			companyRepository.save(company);
-
-			Project project = new Project();
-			project.setClientName("John Doe");
-			project.setClientAddress("123 Main St");
-			project.setClientPhone("555-1234");
-			project.setClientDni("12345678");
-			project.setProviderHost("provider.com");
-			project.setProviderDomain("provider.com");
-			project.setClientEmail("client@example.com");
-			project.setProjectName("Test Project");
-			project.setDescription("This is a test project.");
-			project.setProjectUrl("testproject.com");
-			project.setType(ProjectType.WEB);
-			project.setInitDate(LocalDate.now());
-			project.setExpDate(LocalDate.now().plusYears(1));
-			project.setLicenseType(LicenseType.ANUAL);
-			project.setRedirect("http://redirect.com");
-			project.setPaymentUrl("http://payment.com");
-			project.setPrice(1000.0);
-			project.setBalance(500.0);
-			project.setStatusLicense(true);
-			project.setStatusProject(true);
-			project.setCompany(company);
-
-			projectRepository.save(project);
-			License license = licenseService.createLicense(LicenseType.ANUAL, LocalDate.now(), project);
-			project.setLicense(license);
-
-			projectRepository.save(project);
+//			Company company = new Company();
+//			company.setCompanyName("Test Company");
+//			companyRepository.save(company);
+//
+//			Project project = new Project();
+//			project.setClientName("John Doe");
+//			project.setClientAddress("123 Main St");
+//			project.setClientPhone("555-1234");
+//			project.setClientDni("12345678");
+//			project.setProviderHost("provider.com");
+//			project.setProviderDomain("provider.com");
+//			project.setClientEmail("client@example.com");
+//			project.setProjectName("Test Project");
+//			project.setDescription("This is a test project.");
+//			project.setProjectUrl("testproject.com");
+//			project.setType(ProjectType.WEB);
+//			project.setInitDate(LocalDate.now());
+//			project.setExpDate(LocalDate.now().plusYears(1));
+//			project.setLicenseType(LicenseType.ANUAL);
+//			project.setRedirect("http://redirect.com");
+//			project.setPaymentUrl("http://payment.com");
+//			project.setPrice(1000.0);
+//			project.setBalance(500.0);
+//			project.setStatusLicense(true);
+//			project.setStatusProject(true);
+//			project.setCompany(company);
+//
+//			projectRepository.save(project);
+//			License license = licenseService.createLicense(LicenseType.ANUAL, LocalDate.now(), project);
+//			project.setLicense(license);
+//
+//			projectRepository.save(project);
 		};
 	}
 }

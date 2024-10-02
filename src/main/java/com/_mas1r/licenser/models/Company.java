@@ -24,6 +24,10 @@ public class Company {
 
     private String companyLogo;
 
+    private String primaryColor;
+
+    private String secondaryColor;
+
     @OneToOne(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AdminCompany adminCompany;
 
@@ -51,6 +55,8 @@ public class Company {
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Project> projects;
+
+    private String companyKeyId;
 
     private String whatsappToken;
 }

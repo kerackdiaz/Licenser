@@ -9,6 +9,7 @@ import com._mas1r.licenser.models.UserCompany;
 import com._mas1r.licenser.repositories.AdminRepository;
 import com._mas1r.licenser.repositories.UserRepository;
 import com._mas1r.licenser.service.AuthenticacionService;
+import com._mas1r.licenser.service.CompanyService;
 import com._mas1r.licenser.service.ProjectService;
 import com._mas1r.licenser.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,13 +30,8 @@ public class CompanyController {
     private AdminRepository adminRepository;
 
     @Autowired
-    private UserService userService;
+    private CompanyService companyService;
 
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private AuthenticacionService authenticacionService;
 
 
     @Operation(summary = "Get Agency Data", description = "Devuelve toda la info de la agencia/Empresa")
@@ -43,39 +39,34 @@ public class CompanyController {
 //    @Hidden
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getCurrentData(){
-    return ResponseEntity.ok(projectService.getAllData());
+    return ResponseEntity.ok(companyService.currentCompany());
     }
 
-    @Operation(summary = "Get Users", description = "Devuelve todos los usuarios de la agencia/empresa")
-    @GetMapping("/users")
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<?> getUsers(String companyId){
-        String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany admin = adminRepository.findByEmail(userMail);
-        UserCompany user = userRepository.findByEmail(userMail);
-        Company company = admin != null ? admin.getCompany() : user.getCompany();
-        return ResponseEntity.ok(userService.getAllUsers(company.getId()));
-    }
+
 
     @Operation(summary = "Get All Agencies", description = "Devuelve todas las Agencias/Empresas")
     @GetMapping("/agencies")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getAllAgencies() {
-        return ResponseEntity.ok(userService.getAllCompanies());
+        return ResponseEntity.ok(companyService.getAllCompanies());
     }
+
+
 
     @Operation(summary = "Update Company", description = "Actualiza la informacion de la empresa")
     @PutMapping("/update/{companyId}")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> updateCompany(@PathVariable String companyId, @RequestBody CompanyDTO company){
-        return ResponseEntity.ok(userService.updateCompany(companyId, company));
+        return ResponseEntity.ok(companyService.updateCompany(companyId, company));
     }
+
+
 
     @Operation(summary = "Create Company", description = "Crea una nueva empresa")
     @PostMapping
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> createCompany(@RequestBody RegisterCompanyDTO register){
-        return ResponseEntity.ok(authenticacionService.CreateCompany(register));
+        return ResponseEntity.ok(companyService.CreateCompany(register));
     }
 
 }
