@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface CompanyService {
-    List<CompanyExtractDTO> getAllCompanies();
+    Map<Object, List<CompanyExtractDTO>> getAllCompanies();
 
     CompanyDTO currentCompany();
 

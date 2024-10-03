@@ -32,4 +32,10 @@ public class MasterAdmin {
         private SMTP smtp;
 
         private String role;
+
+        @Lob
+        private String publicKey;
+
+        @Lob
+        private String privateKey;
 }

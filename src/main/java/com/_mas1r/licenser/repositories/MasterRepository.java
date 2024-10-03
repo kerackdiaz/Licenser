@@ -13,4 +13,6 @@ public interface MasterRepository extends JpaRepository<MasterAdmin, UUID> {
     boolean existsByEmail(String username);
 
     MasterAdmin findByUsername(String input);
+
+    MasterAdmin findByPublicKey(String publicKeyEncoded);
 }

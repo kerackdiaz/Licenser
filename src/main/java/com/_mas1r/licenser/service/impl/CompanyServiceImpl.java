@@ -10,7 +10,6 @@ import com._mas1r.licenser.service.LicenseService;
 import com._mas1r.licenser.service.SenderNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,11 +53,11 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     @Override
-    public List<CompanyExtractDTO> getAllCompanies() {
+    public Map<Object, List<CompanyExtractDTO>> getAllCompanies() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
         if (masterAdmin != null) {
-            return companyRepository.findAll().stream().map(CompanyExtractDTO::new).collect(Collectors.toList());
+            return Map.of(masterAdmin.getFirstName() + " " + masterAdmin.getLastName(), companyRepository.findAll().stream().map(CompanyExtractDTO::new).collect(Collectors.toList()));
         }
         return null;
     }
