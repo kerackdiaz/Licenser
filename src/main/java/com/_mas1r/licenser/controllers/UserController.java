@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -32,9 +34,25 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
+    @Operation(summary = "Get Master", description = "Devuelve el Master Admin")
+    @GetMapping("/current/master")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public MasterAdminDTO currentMaster() {
+        return new MasterAdminDTO(userService.currentMaster());
+    }
 
+    @Operation(summary = "Update Master", description = "Actualiza el Master Admin")
     @PatchMapping("/updateMaster")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> updateMaster(@RequestBody MasterAdminDTO master) {
         return ResponseEntity.ok(userService.updateMasterAdmin(master));
     }
+
+    @Operation(summary = "Delete User", description = "Elimina un usuario")
+    @DeleteMapping("/delete/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
+        return ResponseEntity.ok(userService.deleteUser(id));
+    }
+
 }

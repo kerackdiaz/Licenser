@@ -65,13 +65,21 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     @Override
-    public CompanyDTO currentCompany(){
+    public CompanyDTO currentCompany() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         AdminCompany adminCompany = adminRepository.findByEmail(email);
         UserCompany user = userRepository.findByEmail(email);
         Company company = adminCompany != null ? adminCompany.getCompany() : user.getCompany();
+        CompanyDTO companyDTO = new CompanyDTO(company);
 
-        return new CompanyDTO(company);
+        assert adminCompany != null;
+        companyDTO.setUserLogged(adminCompany.getFirstName() + " " + adminCompany.getLastName());
+
+        if (user != null) {
+            companyDTO.setUserLogged(user.getFirstName() + " " + user.getLastName());
+            return companyDTO;
+        }
+        return companyDTO;
     }
 
 
@@ -132,6 +140,17 @@ public class CompanyServiceImpl implements CompanyService {
             licenseRepository.save(license);
             companyRepository.save(company);
 
+            //create SMTP
+            SMTP smtp = new SMTP();
+            smtp.setHost("Set Data");
+            smtp.setPort(465);
+            smtp.setUsername("Set Data");
+            smtp.setPassword("Set Data");
+            smtp.setCompany(company);
+            smtpRepository.save(smtp);
+            company.setSmtp(smtp);
+            companyRepository.save(company);
+
             AdminCompany adminCompany = new AdminCompany();
             adminCompany.setFirstName(register.getAdminFirstName());
             adminCompany.setLastName(register.getAdminLastName());
@@ -139,6 +158,7 @@ public class CompanyServiceImpl implements CompanyService {
             adminCompany.setEmail(register.getAdminEmail());
             adminCompany.setPassword(passwordEncoder.encode(register.getAdminPassword()));
             adminCompany.setCompany(company);
+            adminCompany.setRole("ADMIN");
             adminRepository.save(adminCompany);
 
             senderNotificationService.sendRegisterCompanyNotification(company);

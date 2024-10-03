@@ -38,18 +38,17 @@ public class WebConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/signup", "/api/v1/license/check/*","/api/v1/auth/recovery/*",
-                                "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**","/api/v1/company/Current").permitAll()
 
-                        .requestMatchers("/api/users/current", "/api/users/current/claims", "/api/users/current/delete-claims",
+                        .requestMatchers("/api/v1/company/Current", "/api/users/current/claims", "/api/users/current/delete-claims",
                                 "/api/users/notifications-read/{id}").hasRole("USER")
 
-                        .requestMatchers( "/api/claims/new-claim", "/api/claims/update-claim", "/api/claims/delete-claim",
-                                "/api/users/all", "/api/admin-super/register", "/api/admin-super/update-password", "/api/admin-super/all" ).hasRole( "ADMIN_SUPER")
+                        .requestMatchers( "/api/v1/company/current", "/api/claims/update-claim", "/api/claims/delete-claim",
+                                "/api/users/all", "/api/admin-super/register", "/api/admin-super/update-password", "/api/admin-super/all" ).hasRole( "ADMIN")
 
 
-                        .requestMatchers( "/api/admin/current", "/api/user-claims/all", "/api/user-claims/update-status", "/api/admin/create-claim",
+                        .requestMatchers( "/api/user-claims/all", "/api/user-claims/update-status", "/api/admin/create-claim",
                                 "/api/claim-status-history/{id}", "/api/claim-status-history/all").hasAnyRole("ADMIN", "ADMIN_SUPER")
-//                        "/api/userClaims/updateStatus"
 
                         .requestMatchers("/api/claims/all").hasAnyRole("ADMIN", "ADMIN_SUPER", "USER")
                         .anyRequest().authenticated())

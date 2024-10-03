@@ -6,8 +6,6 @@ import com._mas1r.licenser.models.*;
 import com._mas1r.licenser.repositories.*;
 import com._mas1r.licenser.security.JwtUtilService;
 import com._mas1r.licenser.service.AuthenticacionService;
-import com._mas1r.licenser.service.LicenseService;
-import com._mas1r.licenser.service.SenderNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -152,11 +150,19 @@ public Map<String, Object> Register(SignUpDTO signUpDTO, String email) {
 
             if (user != null) {
                 if (!passwordEncoder.matches(signinDTO.getPassword(), user.getPassword())) {
+                    if (!user.getCompany().isActive()){
+                        response.put("message", "Your License is expired, contact the platform administrator");
+                        return response;
+                    }
                     response.put("message", "Password is incorrect");
                     return response;
                 }
             } else if (admin != null) {
                 if (!passwordEncoder.matches(signinDTO.getPassword(), admin.getPassword())) {
+                    if (!admin.getCompany().isActive()){
+                        response.put("message", "Your License is expired, contact the platform administrator");
+                        return response;
+                    }
                     response.put("message", "Password is incorrect");
                     return response;
                 }
@@ -166,16 +172,7 @@ public Map<String, Object> Register(SignUpDTO signUpDTO, String email) {
                     return response;
                 }
             }
-            if (master == null) {
-                if (!user.getCompany().isActive()){
-                    response.put("message", "Your License is expired, contact the platform administrator");
-                    return response;
-                }
-                if (!admin.getCompany().isActive()){
-                    response.put("message", "Your License is expired, contact the platform administrator");
-                    return response;
-                }
-            }
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinDTO.getUsername(), signinDTO.getPassword()));
             final UserDetails userDetails = userDetailsService.loadUserByUsername(signinDTO.getUsername());
             final String jwt = jwtUtilService.generateToken(userDetails);

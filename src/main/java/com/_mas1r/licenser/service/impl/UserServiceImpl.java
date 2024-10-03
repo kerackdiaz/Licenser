@@ -1,7 +1,5 @@
 package com._mas1r.licenser.service.impl;
 
-import com._mas1r.licenser.dtos.CompanyDTO;
-import com._mas1r.licenser.dtos.CompanyExtractDTO;
 import com._mas1r.licenser.dtos.MasterAdminDTO;
 import com._mas1r.licenser.dtos.UsersDTO;
 import com._mas1r.licenser.models.*;
@@ -89,6 +87,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public MasterAdmin currentMaster() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return masterRepository.findByEmail(email);
+    }
+
+
+
+    @Override
     public String updateMasterAdmin(MasterAdminDTO masterAdminDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         MasterAdmin masterAdmin = masterRepository.findByEmail(email);
@@ -134,5 +140,20 @@ public class UserServiceImpl implements UserService {
             return "Master Admin updated";
         }
         return "Master Admin not found";
+    }
+
+
+    @Override
+    public String deleteUser(UUID id){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        AdminCompany adminCompany = adminRepository.findByEmail(email);
+        if(adminCompany != null){
+            UserCompany userCompany = userRepository.findById(id).orElse(null);
+            if(userCompany != null){
+                userRepository.delete(userCompany);
+                return "User deleted";
+            }
+        }
+        return "User not found";
     }
 }

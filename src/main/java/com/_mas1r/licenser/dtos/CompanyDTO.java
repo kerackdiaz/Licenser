@@ -15,6 +15,8 @@ public class CompanyDTO {
 
     private String name;
 
+    private String userLogged;
+
     private String address;
 
     private String city;
