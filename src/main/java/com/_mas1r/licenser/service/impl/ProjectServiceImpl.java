@@ -255,8 +255,8 @@ public String updateProject(Long projectId, ProjectDTO projectDTO) {
 @Override
 public ProjectDTO getProject(Long id) {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    UserCompany user = userRepository.findByEmail(email);
-    AdminCompany adminCompany = adminRepository.findByEmail(email);
+    UserCompany user = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
+    AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
     Company company = adminCompany != null ? adminCompany.getCompany() : user != null ? user.getCompany() : null;
 
     if (company == null) {

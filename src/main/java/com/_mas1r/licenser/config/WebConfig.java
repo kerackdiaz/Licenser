@@ -38,9 +38,9 @@ public class WebConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/signup", "/api/v1/license/check/*","/api/v1/auth/recovery/*",
-                                "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**","/api/v1/company/Current").permitAll()
+                                "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-                        .requestMatchers("/api/v1/company/Current", "/api/users/current/claims", "/api/users/current/delete-claims",
+                        .requestMatchers("/api/v1/company/current", "/api/users/current/claims", "/api/users/current/delete-claims",
                                 "/api/users/notifications-read/{id}").hasRole("USER")
 
                         .requestMatchers( "/api/v1/company/current", "/api/claims/update-claim", "/api/claims/delete-claim",

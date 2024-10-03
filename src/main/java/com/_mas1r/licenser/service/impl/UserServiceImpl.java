@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UsersDTO> getAllUsers() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        UserCompany user = userRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+        UserCompany user = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         Company company = adminCompany != null ? adminCompany.getCompany() : user.getCompany();
         List<UsersDTO> users = company.getUserCompanies().stream().map(UsersDTO::new).collect(Collectors.toList());
         assert adminCompany != null;
@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public String updateUser(UsersDTO usersDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        UserCompany user = userRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+        UserCompany user = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
 
         if(adminCompany != null){
             if(!usersDTO.getFirstName().isBlank() && !adminCompany.getFirstName().equals(usersDTO.getFirstName())){
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public MasterAdmin currentMaster() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return masterRepository.findByEmail(email);
+        return masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
     }
 
 
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String updateMasterAdmin(MasterAdminDTO masterAdminDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        MasterAdmin masterAdmin = masterRepository.findByEmail(email);
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
         if(masterAdmin != null){
             if(!masterAdminDTO.getFirstName().isBlank() && !masterAdmin.getFirstName().equals(masterAdminDTO.getFirstName())){
                 masterAdmin.setFirstName(masterAdminDTO.getFirstName());
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String deleteUser(UUID id){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
         if(adminCompany != null){
             UserCompany userCompany = userRepository.findById(id).orElse(null);
             if(userCompany != null){

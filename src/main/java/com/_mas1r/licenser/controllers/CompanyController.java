@@ -20,7 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/vi/company")
+@RequestMapping("/api/v1/company")
 public class CompanyController {
 
     @Autowired

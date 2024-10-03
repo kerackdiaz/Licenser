@@ -82,17 +82,17 @@ public class MailSenderServiceImlp implements MailSenderService {
     }
 
     private SMTP getSMTPConfig(String email) {
-        MasterAdmin masterAdmin = masterRepository.findByEmail(email);
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
         if (masterAdmin != null) {
             return smtpRepository.findByMasterAdminId(masterAdmin.getId());
         }
 
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
         if (adminCompany != null) {
             return smtpRepository.findByCompanyId(adminCompany.getCompany().getId());
         }
 
-        UserCompany userCompany = userRepository.findByEmail(email);
+        UserCompany userCompany = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         if (userCompany != null) {
             return smtpRepository.findByCompanyId(userCompany.getCompany().getId());
         }
@@ -120,8 +120,8 @@ public class MailSenderServiceImlp implements MailSenderService {
     @Override
     public String createMailBody(MailBodyDTO mailBodyDTO){
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    AdminCompany adminCompany = adminRepository.findByEmail(email);
-    UserCompany userCompany = userRepository.findByEmail(email);
+    AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+    UserCompany userCompany = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         Company company = adminCompany.getCompany() != null ? adminCompany.getCompany() : userCompany.getCompany();
         EmailBody emailBody = new EmailBody();
         emailBody.setProjectType(ProjectType.valueOf(mailBodyDTO.getProjectType()));
@@ -136,8 +136,8 @@ public class MailSenderServiceImlp implements MailSenderService {
     @Override
     public List<MailBodyDTO> getAllEmails(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        UserCompany userCompany = userRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+        UserCompany userCompany = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         Company company = adminCompany.getCompany() != null ? adminCompany.getCompany() : userCompany.getCompany();
         return company.getEmailBodies().stream().map(MailBodyDTO::new).collect(Collectors.toList());
     }
@@ -145,8 +145,8 @@ public class MailSenderServiceImlp implements MailSenderService {
     @Override
     public String updateEmail(MailBodyDTO mailBodyDTO){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        UserCompany userCompany = userRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+        UserCompany userCompany = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         Company company = adminCompany.getCompany() != null ? adminCompany.getCompany() : userCompany.getCompany();
         EmailBody emailBody = company.getEmailBodies().stream().filter(e -> e.getId().equals(UUID.fromString(mailBodyDTO.getId()))).findFirst().orElse(null);
         emailBody.setProjectType(ProjectType.valueOf(mailBodyDTO.getProjectType()));
@@ -160,8 +160,8 @@ public class MailSenderServiceImlp implements MailSenderService {
     @Override
     public String deleteEmail(UUID id){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        UserCompany userCompany = userRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+        UserCompany userCompany = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         Company company = adminCompany.getCompany() != null ? adminCompany.getCompany() : userCompany.getCompany();
         EmailBody emailBody = company.getEmailBodies().stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null);
         emailRepository.delete(emailBody);

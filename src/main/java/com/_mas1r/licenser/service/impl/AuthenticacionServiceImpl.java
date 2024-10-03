@@ -50,8 +50,8 @@ public class AuthenticacionServiceImpl implements AuthenticacionService {
 @Override
 public Map<String, Object> Register(SignUpDTO signUpDTO, String email) {
     Map<String, Object> response = new HashMap<>();
-    AdminCompany adminCompany = adminRepository.findByEmail(email);
-    MasterAdmin masterAdmin = masterRepository.findByEmail(email);
+    AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+    MasterAdmin masterAdmin = masterRepository.findByEmail(email)  != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
 
     try {
         if (signUpDTO.getFirstName().isBlank()) {
@@ -133,15 +133,10 @@ public Map<String, Object> Register(SignUpDTO signUpDTO, String email) {
                 response.put("message", "Password is empty");
                 return response;
             }
-            UserCompany user = userRepository.findByEmail(signinDTO.getUsername());
-            AdminCompany admin = adminRepository.findByEmail(signinDTO.getUsername());
-            MasterAdmin master = masterRepository.findByEmail(signinDTO.getUsername());
+            UserCompany user = userRepository.findByEmail(signinDTO.getUsername()) != null ? userRepository.findByEmail(signinDTO.getUsername()) : userRepository.findByUsername(signinDTO.getUsername());
+            AdminCompany admin = adminRepository.findByEmail(signinDTO.getUsername()) != null ? adminRepository.findByEmail(signinDTO.getUsername()) : adminRepository.findByUsername(signinDTO.getUsername());
+            MasterAdmin master = masterRepository.findByEmail(signinDTO.getUsername())  != null ? masterRepository.findByEmail(signinDTO.getUsername()) : masterRepository.findByUsername(signinDTO.getUsername());
 
-            if (user == null && admin == null && master == null) {
-                user = userRepository.findByUsername(signinDTO.getUsername());
-                admin = adminRepository.findByUsername(signinDTO.getUsername());
-                master = masterRepository.findByUsername(signinDTO.getUsername());
-            }
 
             if (user == null && admin == null && master == null) {
                 response.put("message", "User does not exist");

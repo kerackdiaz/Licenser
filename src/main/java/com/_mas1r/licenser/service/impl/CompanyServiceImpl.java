@@ -56,7 +56,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<CompanyExtractDTO> getAllCompanies() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        MasterAdmin masterAdmin = masterRepository.findByEmail(email);
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
         if (masterAdmin != null) {
             return companyRepository.findAll().stream().map(CompanyExtractDTO::new).collect(Collectors.toList());
         }
@@ -67,8 +67,8 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDTO currentCompany() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
-        UserCompany user = userRepository.findByEmail(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
+        UserCompany user = userRepository.findByEmail(email) != null ? userRepository.findByEmail(email) : userRepository.findByUsername(email);
         Company company = adminCompany != null ? adminCompany.getCompany() : user.getCompany();
         CompanyDTO companyDTO = new CompanyDTO(company);
 
@@ -87,7 +87,7 @@ public class CompanyServiceImpl implements CompanyService {
     public Map<String, Object> CreateCompany(RegisterCompanyDTO register) {
         Map<String, Object> response = new HashMap<>();
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        MasterAdmin masterAdmin = masterRepository.findByEmail(email);
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
 
         if (masterAdmin == null) {
             response.put("message", "You do not have permission to perform this action");
@@ -176,8 +176,8 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public String updateCompany(String id, CompanyDTO companyDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        MasterAdmin masterAdmin = masterRepository.findByEmail(email);
-        AdminCompany adminCompany = adminRepository.findByEmail(email);
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
+        AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
 
         Company company = companyRepository.findById(UUID.fromString(id)).orElse(null);
         if (company == null) {
