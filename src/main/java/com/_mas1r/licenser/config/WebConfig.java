@@ -38,17 +38,14 @@ public class WebConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/signup", "/api/v1/license/check/*","/api/v1/auth/recovery/*",
-                                "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/master-admin/getallcompanies", "/api/master-admin/changeStatus/*", "/api/master-admin/createnewcompany").permitAll()
 
-                        .requestMatchers("/api/v1/company/current", "/api/users/current/claims", "/api/users/current/delete-claims",
-                                "/api/users/notifications-read/{id}").hasRole("USER")
+                        .requestMatchers("/api/v1/company/current").hasRole("USER")
 
-                        .requestMatchers( "/api/v1/company/current", "/api/claims/update-claim", "/api/claims/delete-claim",
-                                "/api/users/all", "/api/admin-super/register", "/api/admin-super/update-password", "/api/admin-super/all" ).hasRole( "ADMIN")
+                        .requestMatchers( "/api/v1/company/current" ).hasRole( "ADMIN")
 
 
-                        .requestMatchers( "/api/user-claims/all", "/api/user-claims/update-status", "/api/admin/create-claim",
-                                "/api/claim-status-history/{id}", "/api/claim-status-history/all").hasAnyRole("ADMIN", "ADMIN_SUPER")
+                        .requestMatchers( "/api/master-admin/generate-keys", "/api/v1/users/current/master").hasAnyRole( "ADMIN_SUPER")
 
                         .requestMatchers("/api/claims/all").hasAnyRole("ADMIN", "ADMIN_SUPER", "USER")
                         .anyRequest().authenticated())

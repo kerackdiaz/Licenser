@@ -20,6 +20,7 @@ public class Company {
 
     private String companyName;
 
+    @Column(unique = true)
     private String companyEmail;
 
     private String companyLogo;

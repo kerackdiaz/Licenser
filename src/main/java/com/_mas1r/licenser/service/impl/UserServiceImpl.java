@@ -89,7 +89,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public MasterAdmin currentMaster() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
+        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
+        if(masterAdmin.getSmtp() == null){
+            SMTP smtp = new SMTP();
+            smtp.setMasterAdmin(masterAdmin);
+            smtpRepository.save(smtp);
+            masterAdmin.setSmtp(smtp);
+            masterRepository.save(masterAdmin);
+        }
+        return masterAdmin;
     }
 
 

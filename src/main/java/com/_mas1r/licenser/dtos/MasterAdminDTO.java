@@ -33,6 +33,8 @@ public class MasterAdminDTO {
 
     private String passwordSMTP;
 
+    private String publicKey;
+
     public MasterAdminDTO(MasterAdmin masterAdmin) {
         this.firstName = masterAdmin.getFirstName();
         this.lastName = masterAdmin.getLastName();
@@ -42,6 +44,6 @@ public class MasterAdminDTO {
         this.port = masterAdmin.getSmtp().getPort();
         this.usernameSMTP = masterAdmin.getSmtp().getUsername();
         this.passwordSMTP = masterAdmin.getSmtp().getPassword();
-
+        this.publicKey = masterAdmin.getPublicKey();
     }
 }

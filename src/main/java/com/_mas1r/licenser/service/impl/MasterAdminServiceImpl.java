@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,22 +49,26 @@ public class MasterAdminServiceImpl implements MasterAdminService {
     @Autowired
     private SenderNotificationService senderNotificationService;
 
-    @Override
-    public void generateAndStoreKeys() throws NoSuchAlgorithmException {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(2048);
+@Override
+public void generateAndStoreKeys() throws NoSuchAlgorithmException {
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
+
+    if (masterAdmin.getPublicKey() == null || masterAdmin.getPublicKey().isEmpty()) {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
+        SecureRandom random = SecureRandom.getInstanceStrong(); // Use a strong source of randomness
+        keyGen.initialize(256, random); // 256 bits for ECC
         KeyPair pair = keyGen.generateKeyPair();
 
         String publicKey = Base64.getEncoder().encodeToString(pair.getPublic().getEncoded());
         String privateKey = Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded());
 
-        MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
-        masterAdmin.setPublicKey(publicKey);
+        masterAdmin.setPublicKey(publicKey); // Store the full public key
         masterAdmin.setPrivateKey(privateKey);
 
         masterRepository.save(masterAdmin);
     }
+}
 
     @Override
     public List<CompanyExtractDTO> getAllCompanies(String publicKey) {

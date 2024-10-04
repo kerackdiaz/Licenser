@@ -36,6 +36,15 @@ public class LicenserApplication {
 			masterAdmin.setRole("ADMIN_SUPER");
 			masterRepository.save(masterAdmin);
 
+//			MasterAdmin masterAdmin1 = new MasterAdmin();
+//			masterAdmin1.setFirstName("John");
+//			masterAdmin1.setLastName("Doe");
+//			masterAdmin1.setEmail("test@tesss.com");
+//			masterAdmin1.setUsername("test");
+//			masterAdmin1.setPassword(passwordEncoder.encode("Test1234"));
+//			masterAdmin1.setRole("ADMIN_SUPER");
+//			masterRepository.save(masterAdmin1);
+
 
 
 //			Company company = new Company();
