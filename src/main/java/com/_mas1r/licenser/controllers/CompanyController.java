@@ -1,6 +1,7 @@
 package com._mas1r.licenser.controllers;
 
 import com._mas1r.licenser.dtos.CompanyDTO;
+import com._mas1r.licenser.dtos.CompanyUpdatetDTO;
 import com._mas1r.licenser.dtos.RegisterCompanyDTO;
 import com._mas1r.licenser.dtos.SignUpDTO;
 import com._mas1r.licenser.models.AdminCompany;
@@ -54,9 +55,9 @@ public class CompanyController {
 
 
     @Operation(summary = "Update Company", description = "Actualiza la informacion de la empresa")
-    @PutMapping("/update/{companyId}")
+    @PatchMapping("/update/{companyId}")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<?> updateCompany(@PathVariable String companyId, @RequestBody CompanyDTO company){
+    public ResponseEntity<?> updateCompany(@PathVariable String companyId, @RequestBody CompanyUpdatetDTO company){
         return ResponseEntity.ok(companyService.updateCompany(companyId, company));
     }
 

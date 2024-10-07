@@ -2,6 +2,7 @@ package com._mas1r.licenser.service.impl;
 
 import com._mas1r.licenser.dtos.CompanyDTO;
 import com._mas1r.licenser.dtos.CompanyExtractDTO;
+import com._mas1r.licenser.dtos.CompanyUpdatetDTO;
 import com._mas1r.licenser.dtos.RegisterCompanyDTO;
 import com._mas1r.licenser.models.*;
 import com._mas1r.licenser.repositories.*;
@@ -173,7 +174,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     @Override
-    public String updateCompany(String id, CompanyDTO companyDTO) {
+    public String updateCompany(String id, CompanyUpdatetDTO companyDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
         AdminCompany adminCompany = adminRepository.findByEmail(email) != null ? adminRepository.findByEmail(email) : adminRepository.findByUsername(email);
@@ -183,20 +184,20 @@ public class CompanyServiceImpl implements CompanyService {
             return "Company not found";
         }
         //company basic data
-        if(!companyDTO.getName().isBlank() && !company.getCompanyName().equals(companyDTO.getName())){
-            company.setCompanyName(companyDTO.getName());
+        if(!companyDTO.getCompanyName().isBlank() && !company.getCompanyName().equals(companyDTO.getCompanyName())){
+            company.setCompanyName(companyDTO.getCompanyName());
         }
-        if(!companyDTO.getAddress().isBlank() && !company.getAddress().equals(companyDTO.getAddress())){
-            company.setAddress(companyDTO.getAddress());
+        if(!companyDTO.getCompanyAddress().isBlank() && !company.getAddress().equals(companyDTO.getCompanyAddress())){
+            company.setAddress(companyDTO.getCompanyAddress());
         }
-        if(!companyDTO.getCity().isBlank() && !company.getCity().equals(companyDTO.getCity())){
-            company.setCity(companyDTO.getCity());
+        if(!companyDTO.getCompanyCity().isBlank() && !company.getCity().equals(companyDTO.getCompanyCity())){
+            company.setCity(companyDTO.getCompanyCity());
         }
-        if(!companyDTO.getPhone().isBlank() && !company.getPhone().equals(companyDTO.getPhone())){
-            company.setPhone(companyDTO.getPhone());
+        if(!companyDTO.getCompanyPhone().isBlank() && !company.getPhone().equals(companyDTO.getCompanyPhone())){
+            company.setPhone(companyDTO.getCompanyPhone());
         }
-        if(!companyDTO.getEmail().isBlank() && !company.getCompanyEmail().equals(companyDTO.getEmail())){
-            company.setCompanyEmail(companyDTO.getEmail());
+        if(!companyDTO.getCompanyEmail().isBlank() && !company.getCompanyEmail().equals(companyDTO.getCompanyEmail())){
+            company.setCompanyEmail(companyDTO.getCompanyEmail());
         }
         //company personalitation data
         if(!companyDTO.getUrlLogo().isBlank() && !company.getCompanyLogo().equals(companyDTO.getUrlLogo())){
@@ -209,9 +210,6 @@ public class CompanyServiceImpl implements CompanyService {
             company.setSecondaryColor(companyDTO.getSecondaryColor());
         }
         //company Settings Data
-        if(!companyDTO.getCompanyKeyId().isBlank() && !company.getCompanyKeyId().equals(companyDTO.getCompanyKeyId())){
-            company.setCompanyKeyId(companyDTO.getCompanyKeyId());
-        }
         if(!companyDTO.getWhatsappToken().isBlank() && !company.getWhatsappToken().equals(companyDTO.getWhatsappToken())){
             company.setWhatsappToken(companyDTO.getWhatsappToken());
         }
@@ -224,19 +222,19 @@ public class CompanyServiceImpl implements CompanyService {
             company.setSmtp(smtp);
             companyRepository.save(company);
         }
-        if (!company.getSmtp().getHost().equals(companyDTO.getHost()) || company.getSmtp().getPort() != companyDTO.getPort() || !company.getSmtp().getUsername().equals(companyDTO.getUsername()) || !company.getSmtp().getPassword().equals(companyDTO.getPassword())) {
+        if (!company.getSmtp().getHost().equals(companyDTO.getHost()) || company.getSmtp().getPort() != companyDTO.getPortHost() || !company.getSmtp().getUsername().equals(companyDTO.getUsernameHost()) || !company.getSmtp().getPassword().equals(companyDTO.getPasswordHost())) {
             SMTP smtp = company.getSmtp();
             if(!companyDTO.getHost().isBlank() && !company.getSmtp().getHost().equals(companyDTO.getHost())){
                 smtp.setHost(companyDTO.getHost());
             }
-            if(companyDTO.getPort() != 0 && company.getSmtp().getPort() != companyDTO.getPort()){
-                smtp.setPort(companyDTO.getPort());
+            if(companyDTO.getPortHost() != 0 && company.getSmtp().getPort() != companyDTO.getPortHost()){
+                smtp.setPort(companyDTO.getPortHost());
             }
-            if(!companyDTO.getUsername().isBlank() && !company.getSmtp().getUsername().equals(companyDTO.getUsername())){
-                smtp.setUsername(companyDTO.getUsername());
+            if(!companyDTO.getUsernameHost().isBlank() && !company.getSmtp().getUsername().equals(companyDTO.getUsernameHost())){
+                smtp.setUsername(companyDTO.getUsernameHost());
             }
-            if(!companyDTO.getPassword().isBlank() && !company.getSmtp().getPassword().equals(companyDTO.getPassword())){
-                smtp.setPassword(companyDTO.getPassword());
+            if(!companyDTO.getPasswordHost().isBlank() && !company.getSmtp().getPassword().equals(companyDTO.getPasswordHost())){
+                smtp.setPassword(companyDTO.getPasswordHost());
             }
             smtpRepository.save(smtp);
             return "SMTP updated";

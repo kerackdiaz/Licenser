@@ -47,7 +47,7 @@ public class ProjectsController {
 
 
     @Operation(summary = "Get Project", description = "Optiene un proyecto")
-    @PostMapping("/project/{id}")
+    @GetMapping("/project/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getProject(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.getProject(id));

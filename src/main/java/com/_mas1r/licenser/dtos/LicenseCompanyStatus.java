@@ -15,9 +15,12 @@ public class LicenseCompanyStatus {
 
     private Boolean licensestatus; //renovar licencia
 
+    private String licenseType;
+
 
     public LicenseCompanyStatus(Company company) {
         this.StatusCompany = company.isActive();
         this.licensestatus = company.getLicense().getExpirationDate().isAfter(LocalDate.now());
+        this.licenseType = company.getLicense().getLicenseType().toString();
     }
 }

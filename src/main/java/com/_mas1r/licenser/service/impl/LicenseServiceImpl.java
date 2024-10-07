@@ -114,11 +114,11 @@ public class LicenseServiceImpl implements LicenseService {
             return "Company not found";
         }
         if(company.isActive() && license.getStatusCompany() && license.getLicensestatus()) {
-            company.getLicense().setExpirationDate(licenseExpiration(company.getLicense().getLicenseType(), LocalDate.now()));
+            company.getLicense().setExpirationDate(licenseExpiration(LicenseType.valueOf(license.getLicenseType()), LocalDate.now()));
             companyRepository.save(company);
             return "Company license updated";
         } else if (!company.isActive() && license.getStatusCompany()) {
-            company.getLicense().setExpirationDate(licenseExpiration(company.getLicense().getLicenseType(), LocalDate.now()));
+            company.getLicense().setExpirationDate(licenseExpiration(LicenseType.valueOf(license.getLicenseType()), LocalDate.now()));
             company.setActive(license.getStatusCompany());
             companyRepository.save(company);
             return "Company license updated and activated";
