@@ -106,20 +106,35 @@ public class LicenseServiceImpl implements LicenseService {
         response.put("Error", "Company not found");
         return response;
     }
-
     @Override
-    public String updateLicenseCompany(String id, LicenseCompanyStatus license){
+    public String updateLicenseCompany(String id, LicenseCompanyStatus license) {
         Company company = companyRepository.findById(UUID.fromString(id)).orElse(null);
         if (company == null) {
             return "Company not found";
         }
-        if(company.isActive() && license.getStatusCompany() && license.getLicensestatus()) {
-            company.getLicense().setExpirationDate(licenseExpiration(LicenseType.valueOf(license.getLicenseType()), LocalDate.now()));
+
+        License companyLicense = company.getLicense();
+        if (companyLicense == null) {
+            return "Company license not found";
+        }
+
+        LicenseType licenseType;
+        try {
+            licenseType = LicenseType.valueOf(license.getLicenseType());
+        } catch (IllegalArgumentException e) {
+            return "Invalid license type";
+        }
+
+        if (company.isActive() && license.getStatusCompany() && license.getLicensestatus()) {
+            companyLicense.setExpirationDate(licenseExpiration(licenseType, LocalDate.now()));
+            companyLicense.setLicenseType(licenseType);
+            licenseRepository.save(companyLicense);
             companyRepository.save(company);
             return "Company license updated";
         } else if (!company.isActive() && license.getStatusCompany()) {
-            company.getLicense().setExpirationDate(licenseExpiration(LicenseType.valueOf(license.getLicenseType()), LocalDate.now()));
+            companyLicense.setExpirationDate(licenseExpiration(licenseType, LocalDate.now()));
             company.setActive(license.getStatusCompany());
+            licenseRepository.save(companyLicense);
             companyRepository.save(company);
             return "Company license updated and activated";
         } else if (company.isActive() && !license.getStatusCompany()) {
