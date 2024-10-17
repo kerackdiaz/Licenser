@@ -72,14 +72,13 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = adminCompany != null ? adminCompany.getCompany() : user.getCompany();
         CompanyDTO companyDTO = new CompanyDTO(company);
 
-        assert adminCompany != null;
+        if(adminCompany != null){
         companyDTO.setUserLogged(adminCompany.getFirstName() + " " + adminCompany.getLastName());
-
-        if (user != null) {
+        return companyDTO;
+        }else {
             companyDTO.setUserLogged(user.getFirstName() + " " + user.getLastName());
             return companyDTO;
         }
-        return companyDTO;
     }
 
 

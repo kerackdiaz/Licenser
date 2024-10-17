@@ -33,9 +33,7 @@ public class MasterAdmin {
 
         private String role;
 
-        @Lob
         private String publicKey;
 
-        @Lob
         private String privateKey;
 }

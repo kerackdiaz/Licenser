@@ -37,7 +37,6 @@ public class CompanyController {
 
     @Operation(summary = "Get Agency Data", description = "Devuelve toda la info de la agencia/Empresa")
     @GetMapping("/current")
-//    @Hidden
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getCurrentData(){
     return ResponseEntity.ok(companyService.currentCompany());

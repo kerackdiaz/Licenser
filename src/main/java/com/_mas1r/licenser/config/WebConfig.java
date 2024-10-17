@@ -40,14 +40,10 @@ public class WebConfig {
                         .requestMatchers("/api/v1/auth/signin", "/api/v1/auth/signup", "/api/v1/license/check/*","/api/v1/auth/recovery/*",
                                 "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/master-admin/getallcompanies", "/api/master-admin/changeStatus/*", "/api/master-admin/createnewcompany", "/api/master-admin/renewal-license/*").permitAll()
 
-                        .requestMatchers("/api/v1/company/current").hasRole("USER")
-
-                        .requestMatchers( "/api/v1/company/current" ).hasRole( "ADMIN")
-
+                        .requestMatchers("/api/v1/company/current").hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers( "/api/master-admin/generate-keys", "/api/v1/users/current/master").hasAnyRole( "ADMIN_SUPER")
 
-                        .requestMatchers("/api/claims/all").hasAnyRole("ADMIN", "ADMIN_SUPER", "USER")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManegment -> sessionManegment

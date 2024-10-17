@@ -27,14 +27,14 @@ public class LicenserApplication {
 	@Bean
 	public CommandLineRunner initData(MasterRepository masterRepository, ProjectRepository projectRepository, CompanyRepository companyRepository, LicenseService licenseService) {
 		return args -> {
-			MasterAdmin masterAdmin = new MasterAdmin();
-			masterAdmin.setFirstName("Ricardo");
-			masterAdmin.setLastName("Diaz");
-			masterAdmin.setEmail("SuperAdmin@licenser.3mas1r.com");
-			masterAdmin.setUsername("kerack");
-			masterAdmin.setPassword(passwordEncoder.encode("Test1234"));
-			masterAdmin.setRole("ADMIN_SUPER");
-			masterRepository.save(masterAdmin);
+//			MasterAdmin masterAdmin = new MasterAdmin();
+//			masterAdmin.setFirstName("Ricardo");
+//			masterAdmin.setLastName("Diaz");
+//			masterAdmin.setEmail("SuperAdmin@licenser.3mas1r.com");
+//			masterAdmin.setUsername("kerack");
+//			masterAdmin.setPassword(passwordEncoder.encode("Test1234"));
+//			masterAdmin.setRole("ADMIN_SUPER");
+//			masterRepository.save(masterAdmin);
 
 //			MasterAdmin masterAdmin1 = new MasterAdmin();
 //			masterAdmin1.setFirstName("John");
