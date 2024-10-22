@@ -57,9 +57,6 @@ public class MasterAdminController {
     @PostMapping("/createnewcompany")
     @SecurityRequirement(name = "Public Key Authentication")
     public ResponseEntity<Map<String, Object>> createNewCompany(@RequestHeader("Authorization") String authorizationHeader, @RequestBody RegisterCompanyDTO registerCompanyDTO) {
-        logger.info("Received request to create new company with Authorization header: {}", authorizationHeader);
-        logger.info("RegisterCompanyDTO: {}", registerCompanyDTO);
-
         if (authorizationHeader != null && authorizationHeader.startsWith("Key ")) {
             String publicKey = authorizationHeader.substring(4);
             Map<String, Object> response = masterAdminService.createNewCompany(publicKey, registerCompanyDTO);

@@ -1,6 +1,7 @@
 package com._mas1r.licenser.service.impl;
 
 import com._mas1r.licenser.dtos.MasterAdminDTO;
+import com._mas1r.licenser.dtos.MasterAdminUpdateDTO;
 import com._mas1r.licenser.dtos.UsersDTO;
 import com._mas1r.licenser.models.*;
 import com._mas1r.licenser.repositories.*;
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String updateMasterAdmin(MasterAdminDTO masterAdminDTO) {
+    public String updateMasterAdmin(MasterAdminUpdateDTO masterAdminDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         MasterAdmin masterAdmin = masterRepository.findByEmail(email) != null ? masterRepository.findByEmail(email) : masterRepository.findByUsername(email);
         if(masterAdmin != null){
@@ -112,12 +113,6 @@ public class UserServiceImpl implements UserService {
             }
             if(!masterAdminDTO.getLastName().isBlank() && !masterAdmin.getLastName().equals(masterAdminDTO.getLastName())){
                 masterAdmin.setLastName(masterAdminDTO.getLastName());
-            }
-            if(!masterAdminDTO.getUsername().isBlank() && !masterAdmin.getUsername().equals(masterAdminDTO.getUsername())){
-                masterAdmin.setUsername(masterAdminDTO.getUsername());
-            }
-            if(!masterAdminDTO.getEmail().isBlank() && !masterAdmin.getEmail().equals(masterAdminDTO.getEmail())){
-                masterAdmin.setEmail(masterAdminDTO.getEmail());
             }
             if(!masterAdminDTO.getPassword().isBlank() && !masterAdmin.getPassword().equals(masterAdminDTO.getPassword())){
                 masterAdmin.setPassword(masterAdminDTO.getPassword());

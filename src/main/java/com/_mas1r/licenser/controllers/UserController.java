@@ -1,6 +1,7 @@
 package com._mas1r.licenser.controllers;
 
 import com._mas1r.licenser.dtos.MasterAdminDTO;
+import com._mas1r.licenser.dtos.MasterAdminUpdateDTO;
 import com._mas1r.licenser.dtos.UsersDTO;
 import com._mas1r.licenser.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +45,7 @@ public class UserController {
     @Operation(summary = "Update Master", description = "Actualiza el Master Admin")
     @PatchMapping("/updateMaster")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<?> updateMaster(@RequestBody MasterAdminDTO master) {
+    public ResponseEntity<?> updateMaster(@RequestBody MasterAdminUpdateDTO master) {
         return ResponseEntity.ok(userService.updateMasterAdmin(master));
     }
 
